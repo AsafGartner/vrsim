@@ -1,11 +1,12 @@
 TopViewRenderer = function(canvas) {
   this.initCanvas(canvas);
-  this.ctx.lineWidth = 2;
+  //this.ctx.lineWidth = 2;
 };
 
 TopViewRenderer.prototype = $.extend({}, BaseRenderer.prototype);
 
-TopViewRenderer.prototype.render = function(scene) {
+TopViewRenderer.prototype.render = function(scenes) {
+  var scene = scenes[scenes.length-1];
   var eyePosition = {
     x: this.width/2,
     y: this.height*0.95

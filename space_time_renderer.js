@@ -4,43 +4,67 @@ function SpaceTimeRenderer(canvas) {
   this.clear();
   this.drawName("Space-Time");
   this.drawEye({ x: this.width/2, y: this.height*0.95 });
-  this.currentPosition = 0;
-  this.clearAmount = 100;
-  this.bottom = this.height*0.8;
+
+  this.lastPosition = this.lastOffset = 0;
+  this.lastObjectPosition = 0;
+  this.clearAmount = this.height;
+  this.graphHeight = this.height*0.8;
+  this.range = 1400;
 };
 
 SpaceTimeRenderer.prototype = $.extend({}, BaseRenderer.prototype);
 
-SpaceTimeRenderer.prototype.render = function(scene) {
+SpaceTimeRenderer.prototype.render = function(scenes) {
+  var scene = scenes[scenes.length-1];
+  for (var i = 0; i < scenes.length; ++i) {
+    var scene = scenes[i];
+
+    this.drawOffset(scene.timestamp,
+                    (scene.objectPosition - scene.trackingPosition) * this.width/2 + this.width/2,
+                    scene.objectColor,
+                    scene.objectPosition != this.lastObjectPosition);
+
+    this.lastObjectPosition = scene.objectPosition;
+  }
+};
+
+SpaceTimeRenderer.prototype.drawOffset = function(time, offset, color, objectMoved, saccade) {
   this.ctx.save();
-
-  var toClear = Math.min(this.clearAmount, this.bottom - this.currentPosition);
-  this.ctx.fillStyle = "black";
-  this.ctx.fillRect(0, this.currentPosition, this.width, toClear);
-  if (toClear < this.clearAmount) {
-    this.ctx.fillRect(0, 0, this.width, this.clearAmount - toClear);
+  this.ctx.strokeStyle = color;
+  this.ctx.fillStyle = color;
+  this.ctx.beginPath();
+  var newPosition = this.timeToPosition(time);
+  offset = Math.floor(offset);
+  this.clearY(this.lastPosition, newPosition);
+  if (!objectMoved && !saccade) {
+    this.prepareLine(this.lastOffset, this.lastPosition, offset, newPosition);
   }
 
-  var objectOffsetFromTracking = (scene.objectPosition - scene.trackingPosition) * this.width/2 + this.width/2;
+  this.ctx.stroke();
 
-  this.ctx.fillStyle = scene.objectColor;
-  this.ctx.fillRect(objectOffsetFromTracking, this.currentPosition, 1, 1);
+  this.lastPosition = newPosition;
+  this.lastOffset = offset;
+
   this.ctx.restore();
-  if (this.lastPosition &&
-      this.lastObjectPosition == scene.objectPosition &&
-      this.lastPosition.y < this.currentPosition) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.lastPosition.x, this.lastPosition.y);
-    this.ctx.lineTo(objectOffsetFromTracking, this.currentPosition);
-    this.ctx.stroke();
+};
+
+SpaceTimeRenderer.prototype.timeToPosition = function(time) {
+  return Math.floor((time % this.range) / this.range * this.graphHeight);
+};
+
+SpaceTimeRenderer.prototype.prepareLine = function(x1, y1, x2, y2) {
+  if (y2 < y1) {
+    y2 = this.graphHeight;
   }
-  this.lastPosition = {
-    x: objectOffsetFromTracking,
-    y: this.currentPosition
-  };
-  this.lastObjectPosition = scene.objectPosition;
-  this.currentPosition++;
-  if (this.currentPosition >= this.bottom) {
-    this.currentPosition = 0;
-  }
+  this.ctx.moveTo(x1, y1);
+  this.ctx.lineTo(x2, Math.min(this.graphHeight-1, y2));
+};
+
+SpaceTimeRenderer.prototype.clearY = function(startY, endY) {
+  startY = Math.floor(startY);
+  endY = Math.floor(endY);
+  this.ctx.save();
+  this.ctx.fillStyle = "black";
+  this.ctx.fillRect(0, startY, this.width, Math.max(0, Math.min(endY - startY + this.clearAmount, this.graphHeight - startY)));
+  this.ctx.restore();
 };

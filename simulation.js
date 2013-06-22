@@ -11,8 +11,8 @@ Simulation.prototype.getScene = function(time) {
 };
 
 Simulation.prototype.motion_function = function(time) {
-  //return (time % 1000)/1000 * 2 - 1;
-  return Math.sin((time/1000)*Math.PI);
+  return (time % 1000)/1000 * 2 - 1;
+  //return Math.sin((time/1000)*Math.PI);
 };
 
 Simulation.prototype.getTrackingPosition = function(x) {

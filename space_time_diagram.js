@@ -31,7 +31,7 @@ $(function() {
   simulation = new Simulation(headset);
   topViewRenderer = new TopViewRenderer($(".top_view")[0]);
   spaceTimeRenderer = new SpaceTimeRenderer($(".space_time")[0]);
-  //firstPersonRenderer = new FirstPersonRenderer($(".first_person")[0], simulation);
+  firstPersonRenderer = new FirstPersonRenderer($(".first_person")[0]);
   mainTimer.start(getTimestamp());
   headset.start(mainTimer.time);
   eye.start(mainTimer.time);
@@ -54,7 +54,7 @@ function runStep() {
     if (scenesToProcess.length > 0) {
       topViewRenderer.render(scenesToProcess);
       spaceTimeRenderer.render(scenesToProcess);
-      //firstPersonRenderer.render(timer.time);
+      firstPersonRenderer.render(scenesToProcess);
     }
 
     scenesToProcess = [];

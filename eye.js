@@ -12,4 +12,5 @@ Eye.prototype.update = function(time) {
 
 Eye.prototype.setObjectPosition = function(position) {
   this.position = position;
+  this.position = 0;
 };

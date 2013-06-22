@@ -1,7 +1,7 @@
 function Headset() {
   this.colorFringing = false;
   this.position = 0;
-  this.setFrameRate(30);
+  this.setFrameRate(10);
   this.frameTimer = new Timer();
   this.frameCount = 0;
   this.colors = ["red", "green", "blue"];

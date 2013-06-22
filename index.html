@@ -16,41 +16,43 @@
         border: 1px solid black;
       }
 
-      .diagram {
+      .diagram, .controls {
         display: inline-block;
+        vertical-align: top;
+        margin: 5px;
+      }
+
+      .controls * {
+        line-height: 30px;
+        vertical-align: middle;
+      }
+
+      .controls span {
+        color: blue;
       }
     </style>
   </head>
   <body>
     <h1>Space-Time Diagram</h1>
-    <div>
-      Fps:
-      <span class="fps"/>
-    </div>
-    <div>
-      Update rate:
-      <span class="update_rate"/>
-    </div>
-    <div>
-      Sample Rate:
-      <span class="sample_rate"/>
-    </div>
-    <div>
-      Color Fringing:
-      <span class="color_fringing"/>
-    </div>
-    <div>
-      Time:
-      <span class="time"/>
-    </div>
     <div class="diagram">
       <canvas class="top_view" width=500 height=500 />
     </div>
     <div class="diagram">
       <canvas class="space_time" width=500 height=500 />
     </div>
+    <br/>
     <div class="diagram">
       <canvas class="first_person" width=500 height=500 />
+    </div>
+    <div class="controls">
+      <div><span class="time"></span> seconds passed since the beginning of the simulation</div>
+      <div>The browser draws the screen <span class="fps"></span> times per second</div>
+      <div>The program updates the virtual headset <span class="update_rate"></span> times per second</div>
+      <div>The headset updates its screen <input class="sample_rate" type="range" min=1 max=200 step=1 value=10 /> <span class="sample_rate_value"></span> times per second</div>
+      <div>Playback speed is <input class="timer_speed" type="range" min=0.01 max=10 step=0.01 value=1 /> <span class="timer_speed_value"></span> seconds per second</div>
+      <div>Space-Time graph shows the last <input class="space_time_range" type="range" min=100 max=10000 value=1400 /> <span class="space_time_range_value"></span> seconds</div>
+      <div>Color Fringing: <input class="color_fringing" type="checkbox" value="false" /></div>
+      <div>Eye Tracking: <input class="eye_tracking" type="checkbox" value="false" /></div>
     </div>
   </body>
 </html>

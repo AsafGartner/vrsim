@@ -39,6 +39,29 @@ $(function() {
   updateCounter.start(mainTimer.time);
   update();
   runStep();
+
+  $("input.timer_speed").change(function() {
+    mainTimer.speed = parseFloat(this.value);
+    $(".timer_speed_value").text(mainTimer.speed);
+  }).change();
+
+  $("input.sample_rate").change(function() {
+    headset.setFrameRate(parseInt(this.value));
+    $(".sample_rate_value").text(headset.frameRate);
+  }).change();
+
+  $("input.space_time_range").change(function() {
+    spaceTimeRenderer.range = parseInt(this.value);
+    $(".space_time_range_value").text(spaceTimeRenderer.range/1000);
+  }).change();
+
+  $("input.color_fringing").change(function() {
+    headset.colorFringing = this.checked;
+  }).change();
+
+  $("input.eye_tracking").change(function() {
+    eye.tracking = this.checked;
+  }).change();
 });
 
 function runStep() {
@@ -48,8 +71,6 @@ function runStep() {
     $(".update_rate").text(updateCounter.value);
     updateSum = updateCount = 0;
     $(".time").text((mainTimer.time/1000).toFixed((3)));
-    $(".sample_rate").text(headset.frameRate);
-    $(".color_fringing").text(headset.colorFringing ? "On" : "Off");
 
     if (scenesToProcess.length > 0) {
       topViewRenderer.render(scenesToProcess);
